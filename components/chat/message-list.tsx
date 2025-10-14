@@ -6,7 +6,7 @@ import { useSocket } from "@/lib/socket/socket-context"
 import { SOCKET_EVENTS } from "@/lib/socket/socket-server"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import type { MessageWithSender } from "@/lib/db/models"
+import { MessageWithSender } from "@/types/chat"
 import { format } from "date-fns"
 
 interface MessageListProps {

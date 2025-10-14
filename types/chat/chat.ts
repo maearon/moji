@@ -27,3 +27,21 @@ export interface ConversationWithDetails {
   createdAt?: string
   updatedAt?: string
 }
+
+export interface MessageWithSender {
+  id: string
+  conversationId: string
+  senderId: string
+  content: string
+  type: "text" | "image" | "file"
+  fileUrl?: string | null
+  fileName?: string | null
+  createdAt: string
+  updatedAt?: string
+  sender: {
+    id: string
+    name: string
+    email?: string
+    avatar?: string | null
+  }
+}
