@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import nodemailer from "nodemailer";
 interface SendEmailValues {
   to: string;
