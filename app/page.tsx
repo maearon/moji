@@ -1,151 +1,99 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
-import { signIn } from "@/lib/auth-client"
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { MessageCircle, Users, Zap, Shield } from "lucide-react"
+import Link from "next/link"
+import { useAuth } from "@/lib/auth/auth-context"
+import ChatWidget from "@/components/chat/ChatWidget"
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+export default function HomePage() {
+  const { user, isLoading } = useAuth()
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
-
-    try {
-      const result = await signIn.email({
-        email,
-        password,
-      })
-
-      if (result.error) {
-        setError(result.error.message || "Đăng nhập thất bại")
-      } else {
-        router.push("/chat")
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Đăng nhập thất bại")
-    } finally {
-      setIsLoading(false)
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.push("/chat")
     }
+  }, [user, isLoading, router])
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-600 border-t-transparent" />
+      </div>
+    )
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-100 via-purple-50 to-pink-50 p-4">
-      <div className="flex w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl">
-        {/* Left side - Login form */}
-        <div className="flex w-full flex-col justify-center p-12 lg:w-1/2">
-          <div className="mx-auto w-full max-w-md">
-            {/* Logo */}
-            <div className="mb-8 flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-500">
-                <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                  />
-                </svg>
-              </div>
-            </div>
-
-            {/* Title */}
-            <div className="mb-8 text-center">
-              <h1 className="mb-2 text-3xl font-bold text-gray-900">Chào mừng quay lại</h1>
-              <p className="text-gray-600">Đăng nhập vào tài khoản Moji của bạn</p>
-            </div>
-
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {error && <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>}
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-700">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="mtikcode@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={isLoading}
-                  className="h-12 rounded-xl border-gray-200 bg-gray-50 px-4 focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-gray-700">
-                    Mật khẩu
-                  </Label>
-                  <Link href="/forgot-password" className="text-sm text-purple-600 hover:text-purple-700">
-                    Quên mật khẩu?
-                  </Link>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                  className="h-12 rounded-xl border-gray-200 bg-gray-50 px-4 focus:border-purple-500 focus:ring-purple-500"
-                />
-              </div>
-
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="h-12 w-full rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-base font-semibold text-white hover:from-purple-700 hover:to-fuchsia-700"
-              >
-                {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
-              </Button>
-
-              <p className="text-center text-sm text-gray-600">
-                Chưa có tài khoản?{" "}
-                <Link href="/register" className="font-semibold text-purple-600 hover:text-purple-700">
-                  Đăng ký
-                </Link>
-              </p>
-            </form>
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-purple-50 to-pink-50">
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="flex flex-col items-center text-center">
+          <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-purple-500 to-fuchsia-500 shadow-2xl">
+            <MessageCircle className="h-12 w-12 text-white" />
           </div>
-
-          {/* Footer */}
-          <p className="mt-8 text-center text-xs text-gray-500">
-            Bằng cách tiếp tục, bạn đồng ý với{" "}
-            <Link href="/terms" className="text-purple-600 hover:underline">
-              Điều khoản dịch vụ
-            </Link>{" "}
-            và{" "}
-            <Link href="/privacy" className="text-purple-600 hover:underline">
-              Chính sách bảo mật
-            </Link>{" "}
-            của chúng tôi.
+          <h1 className="mb-4 text-balance text-5xl font-bold tracking-tight text-gray-900 md:text-6xl lg:text-7xl">
+            Chào mừng đến với{" "}
+            <span className="bg-gradient-to-r from-purple-600 to-fuchsia-600 bg-clip-text text-transparent">Moji</span>
+          </h1>
+          <p className="mb-8 max-w-2xl text-pretty text-lg text-gray-600 md:text-xl">
+            Kết nối với bạn bè, chia sẻ khoảnh khắc và trò chuyện theo thời gian thực. Trải nghiệm nhắn tin hiện đại với
+            phong cách riêng.
           </p>
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <Button
+              asChild
+              size="lg"
+              className="h-12 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 px-8 text-lg font-semibold hover:from-purple-700 hover:to-fuchsia-700"
+            >
+              <Link href="/register">Bắt đầu ngay</Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-12 rounded-xl border-2 border-purple-600 bg-transparent px-8 text-lg font-semibold text-purple-600 hover:bg-purple-50"
+            >
+              <Link href="/login">Đăng nhập</Link>
+            </Button>
+          </div>
         </div>
 
-        {/* Right side - Illustration */}
-        <div className="hidden relative w-1/2 overflow-hidden lg:flex">
-          <img
-            src="/modern-login-illustration-with-people-and-mobile-p.jpg"
-            alt="Login illustration"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+        {/* Features */}
+        <div className="mt-24 grid gap-8 md:grid-cols-3">
+          <div className="flex flex-col items-center rounded-2xl bg-white p-8 text-center shadow-lg">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-500">
+              <Zap className="h-8 w-8 text-white" />
+            </div>
+            <h3 className="mb-2 text-xl font-semibold text-gray-900">Nhắn tin thời gian thực</h3>
+            <p className="text-gray-600">
+              Gửi và nhận tin nhắn ngay lập tức với hệ thống chat thời gian thực siêu nhanh.
+            </p>
+          </div>
+          <div className="flex flex-col items-center rounded-2xl bg-white p-8 text-center shadow-lg">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-500">
+              <Users className="h-8 w-8 text-white" />
+            </div>
+            <h3 className="mb-2 text-xl font-semibold text-gray-900">Quản lý bạn bè</h3>
+            <p className="text-gray-600">
+              Kết nối với bạn bè, quản lý lời mời và xem ai đang trực tuyến theo thời gian thực.
+            </p>
+          </div>
+          <div className="flex flex-col items-center rounded-2xl bg-white p-8 text-center shadow-lg">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-500">
+              <Shield className="h-8 w-8 text-white" />
+            </div>
+            <h3 className="mb-2 text-xl font-semibold text-gray-900">An toàn & Bảo mật</h3>
+            <p className="text-gray-600">
+              Cuộc trò chuyện của bạn được bảo vệ bằng mã hóa và bảo mật tiêu chuẩn ngành.
+            </p>
+          </div>
         </div>
       </div>
+
+      <ChatWidget />
     </div>
   )
 }
