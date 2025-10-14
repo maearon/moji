@@ -20,7 +20,7 @@ export function MessageInput({ conversationId, onMessageSent }: MessageInputProp
   const [message, setMessage] = useState("")
   const [isSending, setIsSending] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
-  const typingTimeoutRef = useRef<NodeJS.Timeout>()
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (message && !isTyping && socket) {
