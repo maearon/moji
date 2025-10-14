@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { signUp } from "@/lib/auth-client"
+import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -37,16 +37,16 @@ export default function RegisterPage() {
     setIsLoading(true)
 
     try {
-      const result = await signUp.email({
+      const { data, error } = await authClient.signUp.email({
         email: formData.email,
         password: formData.password,
         name: formData.name,
-      })
+      });
 
-      if (result.error) {
-        setError(result.error.message || "Đăng ký thất bại")
+      if (error) {
+        setError(error.message || "Đăng ký thất bại")
       } else {
-        router.push("/chat")
+        router.push(`/e2ee/t/${data.user.id}`)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Đăng ký thất bại")

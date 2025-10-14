@@ -2,7 +2,8 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 import { io, type Socket } from "socket.io-client"
-import { useSession } from "@/lib/auth-client"
+import { getServerSession } from "@/lib/get-session";
+import { redirect } from "next/navigation";
 
 interface SocketContextType {
   socket: Socket | null
@@ -12,14 +13,16 @@ interface SocketContextType {
 
 const SocketContext = createContext<SocketContextType | undefined>(undefined)
 
-export function SocketProvider({ children }: { children: ReactNode }) {
-  const { data: session } = useSession()
+export default async function SocketProvider({ children }: { children: ReactNode }) {
+  const session = await getServerSession();
+  const user = session?.user;
+  if (!user) redirect("/");
   const [socket, setSocket] = useState<Socket | null>(null)
   const [isConnected, setIsConnected] = useState(false)
   const [jwtToken, setJwtToken] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!session?.user) {
+    if (!user) {
       setJwtToken(null)
       return
     }
@@ -40,10 +43,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     }
 
     fetchJWT()
-  }, [session])
+  }, [user])
 
   useEffect(() => {
-    if (!session?.user || !jwtToken) {
+    if (!user || !jwtToken) {
       if (socket) {
         socket.disconnect()
         setSocket(null)
