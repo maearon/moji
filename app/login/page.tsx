@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { signIn } from "@/lib/auth-client"
+import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -22,15 +22,16 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const result = await signIn.email({
+      const { data, error } = await authClient.signIn.email({
         email,
         password,
-      })
+        rememberMe: true,
+      });
 
-      if (result.error) {
-        setError(result.error.message || "Đăng nhập thất bại")
+      if (error) {
+        setError(error.message || "Đăng nhập thất bại")
       } else {
-        router.push(`/e2ee/t/${result.data.user.id}`)
+        router.push(`/e2ee/t/${data.user.id}`)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Đăng nhập thất bại")

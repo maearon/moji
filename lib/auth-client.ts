@@ -5,9 +5,9 @@ import { auth } from "./auth";
  
 export const authClient = createAuthClient({
   plugins: [inferAdditionalFields<typeof auth>(), nextCookies()],
+  //you can pass client configuration here
 });
 
+// Lấy type provider từ chính hàm signIn.social
 type SocialSignInArgs = Parameters<typeof authClient.signIn.social>[0];
 export type ProviderId = SocialSignInArgs["provider"];
-
-export const { useSession, signIn, signOut, signUp } = authClient

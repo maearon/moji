@@ -2,9 +2,10 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { sendEmail } from "./email";
 import { db } from "@/db";
+// import { jwt } from "better-auth/plugins/jwt";
 
-export type Session = typeof auth.$Infer.Session;
-export type User = typeof auth.$Infer.Session.user;
+export type Session = typeof auth.$Infer.Session // 👈 Lấy type Session
+export type User = typeof auth.$Infer.Session.user; // 👈 Lấy type User
  
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -30,6 +31,7 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
+    // requireEmailVerification: true, // Only if you want to block login completely
     async sendResetPassword({ user, url }) {
       await sendEmail({
         to: user.email,
@@ -67,4 +69,23 @@ export const auth = betterAuth({
       },
     },
   },
+  // plugins: [
+  //   jwt({
+  //     jwks: {
+  //       keyPairConfig: {
+  //         alg: "ES512",
+  //       },
+  //     },
+  //     jwt: {
+  //       issuer: "http://localhost",
+  //       audience: "http://localhost",
+  //       expirationTime: "1h", // access token
+  //       definePayload: ({ user }) => ({
+  //         sub: user.id,
+  //         email: user.email,
+  //         name: user.name,
+  //       }),
+  //     },
+  //   }),
+  // ],
 });
