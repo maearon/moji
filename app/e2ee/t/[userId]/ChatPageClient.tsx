@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { getServerSession } from "@/lib/get-session";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -11,7 +10,7 @@ import { MessageInput } from "@/components/chat/message-input"
 import { FriendRequests } from "@/components/friends/friend-requests"
 import { User, LogOut, Bell, Sun, Moon, Plus, MessageCircle, UserPlus } from "lucide-react"
 import Link from "next/link"
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Session } from "@/lib/auth"
 
