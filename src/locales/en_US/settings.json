@@ -1,0 +1,81 @@
+{
+  "title": "Settings",
+  "subtitle": "Manage your store configuration and preferences",
+  "reset": "Reset",
+  "saveChanges": "Save Changes",
+  "tabs": {
+    "store": "Store",
+    "notifications": "Notifications", 
+    "appearance": "Appearance",
+    "security": "Security",
+    "shipping": "Shipping",
+    "payment": "Payment"
+  },
+  "store": {
+    "title": "Store Information",
+    "description": "Configure your store details and contact information",
+    "storeName": "Store Name",
+    "storeDescription": "Store Description", 
+    "storeEmail": "Store Email",
+    "storePhone": "Store Phone",
+    "storeAddress": "Store Address"
+  },
+  "notifications": {
+    "title": "Notification Settings",
+    "description": "Choose how you want to be notified about important events",
+    "emailNotifications": "Email Notifications",
+    "smsNotifications": "SMS Notifications",
+    "pushNotifications": "Push Notifications",
+    "orderNotifications": "Order Notifications",
+    "inventoryAlerts": "Inventory Alerts"
+  },
+  "appearance": {
+    "title": "Appearance Settings",
+    "description": "Customize the look and feel of your admin panel",
+    "theme": "Theme",
+    "language": "Language",
+    "currency": "Currency",
+    "timezone": "Timezone",
+    "themeOptions": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "languageOptions": {
+      "en_US": "English (US)",
+      "vi_VN": "Tiếng Việt (VN)"
+    },
+    "currencyOptions": {
+      "USD": "US Dollar ($)",
+      "VND": "Vietnamese Dong (₫)",
+      "EUR": "Euro (€)"
+    }
+  },
+  "security": {
+    "title": "Security Settings",
+    "description": "Manage your account security and authentication preferences",
+    "twoFactorAuth": "Two-Factor Authentication",
+    "sessionTimeout": "Session Timeout (minutes)",
+    "passwordExpiry": "Password Expiry (days)"
+  },
+  "shipping": {
+    "title": "Shipping Settings",
+    "description": "Configure shipping rates and delivery options",
+    "freeShippingThreshold": "Free Shipping Threshold",
+    "standardShippingCost": "Standard Shipping Cost",
+    "expressShippingCost": "Express Shipping Cost"
+  },
+  "payment": {
+    "title": "Payment Settings", 
+    "description": "Manage payment methods and refund policies",
+    "paymentMethods": "Payment Methods",
+    "autoRefund": "Auto Refund",
+    "refundPeriod": "Refund Period (days)",
+    "paymentMethodOptions": {
+      "credit_card": "Credit Card",
+      "bank_transfer": "Bank Transfer",
+      "cod": "Cash on Delivery"
+    }
+  }
+}
+

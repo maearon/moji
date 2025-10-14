@@ -1,0 +1,310 @@
+services:
+  # API Gateway
+  # This service acts as the API gateway for the microservices architecture.
+  # It handles incoming requests, routes them to the appropriate microservice,
+  # and manages authentication and authorization.
+  # The API Gateway is built using ASP.NET Core and serves as the entry point for the frontend application.
+  # It communicates with various microservices such as Users, Orders, Payments, and Search.
+  # The API Gateway also integrates with Redis for caching, RabbitMQ for message queuing,
+  # and Auth0 for authentication.  
+  api-gateway:
+    build:
+      context: .
+      dockerfile: docker/api-gateway.Dockerfile
+    ports:
+      - "9000:9000"
+    env_file:
+      - ./apps/api-gateway/.env
+    environment:
+      - API_JAVA_URL=http://localhost:8080
+      - API_RUBY_URL=http://localhost:3000
+      - API_PYTHON_URL=http://localhost:8000
+      - PAYMENTS_URL=http://localhost:3003
+
+    # volumes:
+    #   - ./apps/api-gateway:/app
+    # working_dir: /app
+    # command: node server.js
+    # depends_on:
+    #   api-java:
+    #     condition: service_healthy
+    networks:
+      - adidas-network
+  
+  chat-service:
+    build:
+      context: .
+      dockerfile: docker/chat-service.Dockerfile
+    ports:
+      - "3002:3002"
+    env_file:
+      - ./apps/chat-service/.env
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - DATABASE_URL=postgres://default:z9GYTlrXa8Qx@ep-bold-voice-a4yp8xc9-pooler.us-east-1.aws.neon.tech/verceldb?pgbouncer=true&connect_timeout=15&sslmode=require
+      - JWT_SECRET=f2dc6dd1e38c7a0368dcd4c6298cd86af6bd5735cb4e7cf2f0a8dfceeaf47a59eb36906aac1f7003dad1c019c731d0016b58ad5e7c6268b9b4b1fca43a07f7d7
+      - CORS_ORIGIN=http://localhost:3001,https://adidas-mocha.vercel.app
+    # depends_on:
+    #   - postgres
+    volumes:
+      - ./apps/chat-service:/app
+      - /app/node_modules
+    command: npm run dev
+    networks:
+      - adidas-network
+
+  # Frontend
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:9000
+      - NEXT_PUBLIC_AUTH0_DOMAIN=your-domain.auth0.com
+      - NEXT_PUBLIC_AUTH0_CLIENT_ID=your_auth0_client_id
+    # depends_on:
+    #   - api-gateway
+    #   - api-java
+    networks:
+      - adidas-network   
+
+  # API java spring boot auth Service
+  api-java:
+    build:  
+      context: .
+      dockerfile: docker/api-java.Dockerfile
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # 👈 Port debug
+    # volumes:
+    #   - ./apps/spring-boilerplate/src:/app/src
+    # working_dir: /app
+    environment:  
+      # - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - SPRING_PROFILES_ACTIVE=dev
+      - DATABASE_URL=postgres://default:z9GYTlrXa8Qx@ep-bold-voice-a4yp8xc9-pooler.us-east-1.aws.neon.tech/verceldb?pgbouncer=true&connect_timeout=15&sslmode=require
+      - AUTH0_DOMAIN=your-domain.auth0.com
+      - AUTH0_CLIENT_ID=your_auth0_client_id
+      - AUTH0_CLIENT_SECRET=your_auth0_client_secret
+      - REDIS_URL=redis://redis:6379
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
+      - SERVICES_USERS_BASE_URL=http://users:3001
+      - SERVICES_ORDERS_BASE_URL=http://orders:3002
+      - SERVICES_PAYMENTS_BASE_URL=http://payments:3003
+      - SERVICES_SEARCH_BASE_URL=http://search:3004
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
+      - GOOGLE_REDIRECT_URI
+    # command: mvn spring-boot:run
+    networks:
+      - adidas-network 
+
+  #API ruby rails product Service
+  api-ruby:
+    build:
+      context: .
+      dockerfile: docker/api-ruby.Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/ruby-rails-boilerplate:/app
+    working_dir: /app
+    env_file:
+      - ./apps/ruby-rails-boilerplate/.env
+    environment:
+      - CLOUDINARY_CLOUD_NAME=dq7vadalc
+      - CLOUDINARY_API_KEY=187798825221671
+      - CLOUDINARY_API_SECRET=kmp0PPFsOU5CleAINeUFU0ZBbcU
+      - CRON_SECRET=0c063e23e6ded6e0483f7107a3337b50
+      - NEXT_PUBLIC_STREAM_KEY=6cqupfrs4qh3
+      - NEXT_PUBLIC_UPLOADTHING_APP_ID=4ccb128760a9b12e757ee0cc267c4a4f
+      - POSTGRES_DATABASE=adidas_product_prod
+      - POSTGRES_HOST=ep-bold-voice-a4yp8xc9-pooler.us-east-1.aws.neon.tech
+      - POSTGRES_PASSWORD=z9GYTlrXa8Qx
+      - POSTGRES_PRISMA_URL=postgres://default:z9GYTlrXa8Qx@ep-bold-voice-a4yp8xc9-pooler.us-east-1.aws.neon.tech:5432/adidas_product_prod?sslmode=require&pgbouncer=true&connect_timeout=15
+      - POSTGRES_URL=postgres://default:z9GYTlrXa8Qx@ep-bold-voice-a4yp8xc9-pooler.us-east-1.aws.neon.tech:5432/adidas_product_prod?sslmode=require
+      - POSTGRES_URL_NO_SSL=postgres://default:z9GYTlrXa8Qx@ep-bold-voice-a4yp8xc9-pooler.us-east-1.aws.neon.tech:5432/adidas_product_prod
+      - POSTGRES_URL_NON_POOLING=postgres://default:z9GYTlrXa8Qx@ep-bold-voice-a4yp8xc9.us-east-1.aws.neon.tech:5432/adidas_product_prod?sslmode=require
+      - POSTGRES_USER=default
+      - RAILS_MASTER_KEY=6a31ee167b28ab32ab171795d2eff778
+      - STREAM_SECRET=djkppj5rnre3bfqvraufhv8asfkbtngjpx8np7xhnumnege5542sg4vvcx7wx5xq
+      - WEB_CONCURRENCY=4
+    networks:
+    - adidas-network
+  
+  #API dotnet Core Service
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    ports:
+      - "5217:5217"
+    # volumes:
+    #   - aspnet-keys:/root/.aspnet/DataProtection-Keys
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5217   # 🔥 Cho app lắng nghe ở cổng 5217 trong container thay vì 80 mặc định
+    # working_dir: /app
+    networks:
+      - adidas-network
+
+  # Users Service
+  # users:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/users.Dockerfile
+  #   ports:
+  #     - "3001:3001"
+  #   environment:
+  #     - PORT=3001
+  #     - NODE_ENV=development
+  #     - DATABASE_URL=postgres://default:z9GYTlrXa8Qx@ep-bold-voice-a4yp8xc9-pooler.us-east-1.aws.neon.tech/verceldb?pgbouncer=true&connect_timeout=15&sslmode=require
+  #     - AUTH0_DOMAIN=your-domain.auth0.com
+  #     - AUTH0_CLIENT_ID=your_auth0_client_id
+  #     - AUTH0_CLIENT_SECRET=your_auth0_client_secret
+  #     - REDIS_URL=redis://redis:6379
+  #     - POSTGRES_PRISMA_URL=postgres://default:z9GYTlrXa8Qx@ep-bold-voice-a4yp8xc9-pooler.us-east-1.aws.neon.tech/verceldb?pgbouncer=true&connect_timeout=15&sslmode=require
+  #     - POSTGRES_URL_NON_POOLING=postgres://default:z9GYTlrXa8Qx@ep-bold-voice-a4yp8xc9.us-east-1.aws.neon.tech/verceldb?sslmode=require
+  #   depends_on:
+  #     - redis
+  #   networks:
+  #     - adidas-network
+
+  # Orders Service
+  # orders:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/orders.Dockerfile
+  #   ports:
+  #     - "3002:3002"
+  #   environment:
+  #     - NODE_ENV=development
+  #     - DATABASE_URL=${DATABASE_URL}
+  #     - RABBITMQ_URL=${RABBITMQ_URL}
+  #     - REDIS_URL=${REDIS_URL}
+  #   depends_on:
+  #     - rabbitmq
+  #   networks:
+  #     - adidas-network
+
+  # Payments Service
+  payments:
+    build:
+      context: .
+      dockerfile: docker/payments.Dockerfile
+    ports:
+      - "3003:3003"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+    depends_on:
+      - rabbitmq
+      - elasticsearch
+      - redis
+    networks:
+      - adidas-network
+
+  # Search Service
+  api-python:
+    build:
+      context: .
+      dockerfile: docker/api-python.Dockerfile
+    volumes:
+      - ./apps/django-boilerplate:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+      - elasticsearch
+      - redis
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - REDIS_URL=redis://redis:6379
+    networks:
+      - adidas-network
+
+  api-python-search-consumer:
+    build:
+      context: ./apps/django-boilerplate
+    command: python manage.py consume_product_events
+    volumes:
+      - ./apps/django-boilerplate:/app
+    depends_on:
+      - rabbitmq
+      - elasticsearch
+      - redis
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    networks:
+      - adidas-network
+
+  # Legacy PHP Service
+  # legacy:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/legacy.Dockerfile
+  #   ports:
+  #     - "8081:80"
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_URL}
+  #   networks:
+  #     - adidas-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - adidas-network
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-guest}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - adidas-network
+
+  # Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - adidas-network
+
+volumes:
+  aspnet-keys: {}
+  redis_data:
+  rabbitmq_data:
+  elasticsearch_data:
+
+networks:
+  adidas-network:
+    driver: bridge
