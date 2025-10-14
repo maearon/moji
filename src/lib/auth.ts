@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { sendEmail } from "./email";
 import { db } from "@/db";
-import { admin } from "better-auth/plugins"
+// import { jwt } from "better-auth/plugins/jwt";
 
 export type Session = typeof auth.$Infer.Session // 👈 Lấy type Session
 export type User = typeof auth.$Infer.Session.user; // 👈 Lấy type User
@@ -69,9 +69,23 @@ export const auth = betterAuth({
       },
     },
   },
-  plugins: [
-    admin({
-      adminRoles: ["admin"],
-    }),
-  ],
+  // plugins: [
+  //   jwt({
+  //     jwks: {
+  //       keyPairConfig: {
+  //         alg: "ES512",
+  //       },
+  //     },
+  //     jwt: {
+  //       issuer: "http://localhost",
+  //       audience: "http://localhost",
+  //       expirationTime: "1h", // access token
+  //       definePayload: ({ user }) => ({
+  //         sub: user.id,
+  //         email: user.email,
+  //         name: user.name,
+  //       }),
+  //     },
+  //   }),
+  // ],
 });

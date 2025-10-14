@@ -1,9 +1,13 @@
 import axios, { type InternalAxiosRequestConfig, type AxiosResponse } from "axios"
 import { getAccessToken, getRefreshToken, setTokens, clearTokens } from "@/lib/token"
-import type { Nullable } from "@/types/common"
+import { Nullable } from "@/types/common"
 
 // Base URL config
-const BASE_URL = "https://adidas-microservices-fkgu.onrender.com"
+const BASE_URL = process.env.NODE_ENV === "development"
+  ? "http://localhost:9000/api"
+  // : "https://adidas-microservices.onrender.com/api"
+  // : "https://spring-boilerplate.onrender.com/api"
+  : "https://ruby-rails-boilerplate-3s9t.onrender.com/api"
 
 // CSRF & credentials setup
 axios.defaults.xsrfCookieName = "CSRF-TOKEN"
@@ -12,10 +16,10 @@ axios.defaults.withCredentials = true
 
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
+    "x-lang": "EN",
   },
 })
 
@@ -35,7 +39,8 @@ api.interceptors.request.use(
         config.headers["Authorization"] = `Bearer ${token}`
       }
 
-      const guestCartId = localStorage.getItem("guest_cart_id") ?? sessionStorage.getItem("guest_cart_id")
+      const guestCartId =
+        localStorage.getItem("guest_cart_id") ?? sessionStorage.getItem("guest_cart_id")
       if (guestCartId) {
         const url = new URL(config.url || "", BASE_URL)
         if (!url.searchParams.has("guest_cart_id")) {
@@ -130,14 +135,10 @@ api.interceptors.response.use(
       } finally {
         isRefreshing = false
       }
-    } else if (error.response?.status === 401) {
-      // Handle unauthorized
-      localStorage.removeItem("auth_token")
-      window.location.href = "/login"
     }
 
     return Promise.reject(error)
-  },
+  }
 )
 
 export default api
