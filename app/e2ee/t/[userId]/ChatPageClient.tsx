@@ -19,13 +19,19 @@ interface ChatPageClientProps {
 }
 
 export default function ChatPageClient({ session }: ChatPageClientProps) {
+  const { 
+      data: sessionClient, 
+      isPending, //loading state
+      error, //error object
+      refetch //refetch the session
+  } = authClient.useSession()
   const router = useRouter()
   const [selectedConversationId, setSelectedConversationId] = useState<string>()
   const [refreshKey, setRefreshKey] = useState(0)
   const [isDark, setIsDark] = useState(false)
   const [showFriendRequests, setShowFriendRequests] = useState(false)
 
-  if (!session) {
+  if (isPending) {
     return <div className="flex h-screen items-center justify-center">Loading...</div>
   }
 
