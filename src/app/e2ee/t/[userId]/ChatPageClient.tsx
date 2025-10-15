@@ -142,7 +142,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
                   <AvatarFallback className="bg-purple-600 text-white">{user?.name?.[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 text-left">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-foreground">{user?.name}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-foreground hover:dark:text-background">{user?.name}</p>
                   <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
                 <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
