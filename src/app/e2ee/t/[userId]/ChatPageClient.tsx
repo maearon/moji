@@ -133,7 +133,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
           />
         </div>
 
-        <div className="border-t border-gray-200 dark:border-gray-900 p-3">
+        <div className="border-t border-gray-200 dark:border-gray-800 p-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex w-full items-center gap-3 rounded-xl p-2 transition-colors hover:bg-gray-100 group">
