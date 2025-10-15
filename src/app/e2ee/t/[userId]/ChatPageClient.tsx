@@ -8,7 +8,7 @@ import { ConversationList } from "@/components/chat/conversation-list"
 import { MessageList } from "@/components/chat/message-list"
 import { MessageInput } from "@/components/chat/message-input"
 import { FriendRequests } from "@/components/friends/friend-requests"
-import { User, LogOut, Bell, Sun, Moon, Plus, MessageCircle, UserPlus } from "lucide-react"
+import { User, LogOut, Bell, Sun, Moon, Plus, MessageCircle, UserPlus, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -32,7 +32,9 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
   const [showFriendRequests, setShowFriendRequests] = useState(false)
 
   if (isPending) {
-    return <div className="flex h-screen items-center justify-center">Loading...</div>
+    return <div className="flex h-screen items-center justify-center">
+      <Loader2 className="text-purple-600 size-8 animate-spin" />
+    </div>
   }
 
   if (!session?.user) {
@@ -97,7 +99,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
         </div>
 
         <div className="p-4">
-          <button className="flex w-full items-center gap-3 rounded-xl bg-purple-50 p-3 text-left transition-colors hover:bg-purple-100">
+          <button className="flex w-full items-center gap-3 rounded-xl bg-purple-50 dark:bg-background p-3 text-left transition-colors hover:bg-purple-100">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-600">
               <MessageCircle className="h-5 w-5 text-white" />
             </div>
@@ -191,9 +193,9 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
 
       {showFriendRequests && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md">
+          <div className="w-full max-w-md bg-background">
             <FriendRequests />
-            <Button onClick={() => setShowFriendRequests(false)} className="mt-4 w-full bg-background">
+            <Button onClick={() => setShowFriendRequests(false)} className="mt-4 w-full text-foreground">
               Close
             </Button>
           </div>
