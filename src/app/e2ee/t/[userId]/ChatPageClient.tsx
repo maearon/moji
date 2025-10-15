@@ -168,7 +168,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col bg-white">
+      <div className="flex flex-1 flex-col bg-background">
         {selectedConversationId ? (
           <>
             <div className="flex-1 overflow-hidden">
@@ -190,7 +190,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
       </div>
 
       {showFriendRequests && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
           <div className="w-full max-w-md">
             <FriendRequests />
             <Button onClick={() => setShowFriendRequests(false)} className="mt-4 w-full">
