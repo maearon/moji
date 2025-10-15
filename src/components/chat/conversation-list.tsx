@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 // import type { ConversationWithDetails } from "@/lib/db/models"
 import { formatDistanceToNow } from "date-fns"
 import { ConversationWithDetails } from "@/types/chat"
+import { LoadingDots } from "../products/enhanced-product-form"
 
 interface ConversationListProps {
   selectedConversationId?: string
@@ -56,7 +57,7 @@ export function ConversationList({ selectedConversationId, onSelectConversation 
   }
 
   if (isLoading) {
-    return <div className="p-4">Loading conversations...</div>
+    return <p className="p-4 text-center text-sm text-gray-500">Loading conversations<LoadingDots /></p>
   }
 
   return (
