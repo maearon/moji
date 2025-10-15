@@ -99,7 +99,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
         </div>
 
         <div className="p-4">
-          <button className="flex w-full items-center gap-3 rounded-xl bg-purple-50 dark:bg-background p-3 text-left transition-colors hover:bg-purple-100">
+          <button className="flex w-full items-center gap-3 rounded-xl bg-purple-50 p-3 text-left transition-colors hover:bg-purple-100">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-600">
               <MessageCircle className="h-5 w-5 text-white" />
             </div>
@@ -142,7 +142,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
                   <AvatarFallback className="bg-purple-600 text-white">{user?.name?.[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 text-left">
-                  <p className="text-sm font-semibold text-gray-900">{user?.name}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-foreground">{user?.name}</p>
                   <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
                 <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -193,9 +193,9 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
 
       {showFriendRequests && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md bg-background">
+          <div className="w-full max-w-md">
             <FriendRequests />
-            <Button onClick={() => setShowFriendRequests(false)} className="mt-4 w-full text-foreground">
+            <Button onClick={() => setShowFriendRequests(false)} className="mt-4 w-full bg-background text-foreground">
               Close
             </Button>
           </div>
