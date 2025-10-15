@@ -57,7 +57,7 @@ export function ConversationList({ selectedConversationId, onSelectConversation 
   }
 
   if (isLoading) {
-    return <p className="p-4 text-center text-sm text-gray-500">Loading conversations<LoadingDots /></p>
+    return <p className="p-4 text-center text-sm text-gray-500">Loading conversations..<LoadingDots /></p>
   }
 
   return (
