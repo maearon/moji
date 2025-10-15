@@ -136,13 +136,13 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
         <div className="border-t border-gray-200 p-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex w-full items-center gap-3 rounded-xl p-2 transition-colors hover:bg-gray-100">
+              <button className="flex w-full items-center gap-3 rounded-xl p-2 transition-colors hover:bg-gray-100 group">
                 <Avatar className="h-10 w-10">
                   <AvatarImage src={user?.image || "/placeholder.svg"} />
                   <AvatarFallback className="bg-purple-600 text-white">{user?.name?.[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 text-left">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-foreground hover:dark:text-background">{user?.name}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-foreground group-hover:dark:text-background">{user?.name}</p>
                   <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
                 <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
