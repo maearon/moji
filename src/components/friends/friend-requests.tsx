@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useAuth } from "@/lib/auth/auth-context"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
+import { Loader2, X } from "lucide-react"
 
 interface FriendRequestWithSender {
   id: string
@@ -69,7 +69,9 @@ export function FriendRequests() {
   }
 
   if (isLoading) {
-    return <div>Loading requests...</div>
+    return <div className="relative w-full rounded-2xl bg-white p-6 shadow-xl">
+      <Loader2 className="text-purple-600 size-8 animate-spin" />
+    </div>
   }
 
   return (
