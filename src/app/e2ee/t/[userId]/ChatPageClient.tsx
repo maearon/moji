@@ -195,7 +195,7 @@ export default function ChatPageClient({ session }: ChatPageClientProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md">
             <FriendRequests />
-            <Button onClick={() => setShowFriendRequests(false)} className="mt-4 w-full bg-background text-foreground">
+            <Button onClick={() => setShowFriendRequests(false)} className="mt-4 w-full bg-background text-foreground hover:bg-background">
               Close
             </Button>
           </div>
