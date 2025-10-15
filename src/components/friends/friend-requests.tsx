@@ -69,9 +69,11 @@ export function FriendRequests() {
   }
 
   if (isLoading) {
-    return <div className="items-center justify-center min-h-[248px] relative w-full rounded-2xl bg-white p-6 shadow-xl">
-      <Loader2 className="text-purple-600 size-4 animate-spin" />
-    </div>
+    return (
+      <div className="flex items-center justify-center min-h-[248px] w-full rounded-2xl bg-white p-6 shadow-xl">
+        <Loader2 className="text-purple-600 size-8 animate-spin" />
+      </div>
+    )
   }
 
   return (
